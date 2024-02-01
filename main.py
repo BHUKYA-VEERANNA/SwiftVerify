@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QMessageBox, QLa
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt5.QtGui import QMovie
 from PyQt5.uic import loadUi
+from PyQt5.QtGui import QPixmap, QImage
 import mysql.connector
 import os
 import barcode
@@ -11,6 +12,8 @@ from pyzbar.pyzbar import decode
 from barcode.writer import ImageWriter
 import pandas as pd
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import QTimer
+from datetime import datetime, timedelta
 
 class HomePage(QMainWindow):
     def __init__(self):
@@ -224,17 +227,179 @@ class SuccessfulPage(QDialog):
 class markAttedance(QMainWindow):
     def __init__(self, parent=None):
         super(markAttedance, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/mark_attedance.ui', self)    
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/mark_attedance.ui', self)
 
         # Connect back button click to action
         self.pushButton_2.clicked.connect(self.goBack)
-    
+
+        # Create a QTimer to capture frames periodically
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.captureBarcode)
+        self.timer.start(10)  # Set the interval in milliseconds
+
+        # Initialize camera
+        self.capture = cv2.VideoCapture(0)  # Change the camera index if needed
+
+        # Create attendance database and table if not exists
+        self.createAttendanceDatabase()
+
+        # QLabel to display camera feed
+        self.label_camera = self.findChild(QLabel, 'label')  
+
+        # QLabel to display attendance status
+        self.label_status = self.findChild(QLabel, 'label_2')
+
+
     def goBack(self):
+        # Stop the timer and release the camera when going back
+        self.timer.stop()
+        self.capture.release()
         # Show the previous frame (HomePage)
         self.parent().show()
         self.close()
 
+    def createAttendanceDatabase(self):
+        try:
+            # Connect to MySQL server
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password=""
+            )
 
+            # Create a cursor object
+            cursor = conn.cursor()
+
+            # Create the attendance_information database if it does not exist
+            cursor.execute('CREATE DATABASE IF NOT EXISTS attendance_information')
+
+            # Use the attendance_information database
+            cursor.execute('USE attendance_information')
+
+            # Create the attendance table if it does not exist
+            cursor.execute('''CREATE TABLE IF NOT EXISTS attendance (
+                                Name VARCHAR(255),
+                                RollNumber VARCHAR(50),
+                                Time TIME
+                            )''')
+
+            conn.commit()
+
+        except Exception as e:
+            print(f'Error: {str(e)}')
+
+        finally:
+            conn.close()
+
+    def captureBarcode(self):
+        ret, frame = self.capture.read()
+        if ret:
+            # Convert the frame to grayscale
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            # Use pyzbar to decode barcodes
+            barcodes = decode(gray)
+
+            for barcode in barcodes:
+                # Extract the data from the barcode
+                barcode_data = barcode.data.decode('utf-8')
+                #print(f"Detected Barcode: {barcode_data}")
+
+                # Check the database for the student with the matching RollNumber
+                student = self.checkStudent(barcode_data)
+
+                if student:
+                    # Mark attendance in the database
+                    self.markAttendance(student)
+                else:
+                    self.label_status.setStyleSheet("QLabel { color: red; font-weight: bold; }")
+                    self.label_status.setText(f'No existing data found with scanned barcode: {barcode_data}')
+
+            # Display the camera feed on the QLabel
+            self.displayCameraFeed(frame)
+
+    def displayCameraFeed(self, frame):
+        # Convert the OpenCV frame to QImage
+        height, width, channel = frame.shape
+        bytes_per_line = 3 * width
+        q_image = QImage(frame.data, width, height, bytes_per_line, QImage.Format_RGB888)
+
+        # Convert QImage to QPixmap
+        pixmap = QPixmap.fromImage(q_image)
+
+        # Update the QLabel with the QPixmap
+        self.label_camera.setPixmap(pixmap)
+
+    def checkStudent(self, roll_number):
+        try:
+            # Connect to MySQL server
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password=""
+            )
+
+            # Create a cursor object
+            cursor = conn.cursor()
+
+            # Use the students database
+            cursor.execute('USE student_information')
+
+            # Retrieve the student from the database based on RollNumber
+            cursor.execute('SELECT * FROM students WHERE RollNumber=%s', (roll_number,))
+            student = cursor.fetchone()
+
+            return student
+
+        except Exception as e:
+            print(f'Error: {str(e)}')
+
+        finally:
+            conn.close()
+
+    def markAttendance(self, student):
+        try:
+            # Connect to MySQL server
+            conn = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password=""
+            )
+
+            # Create a cursor object
+            cursor = conn.cursor()
+
+            # Use the attendance database
+            cursor.execute('USE attendance_information')
+
+            # Check if the student has already been marked present in the last hour
+            current_time = datetime.now().strftime('%H:%M:%S')
+            last_hour = (datetime.now() - timedelta(hours=1)).strftime('%H:%M:%S')
+            cursor.execute('SELECT * FROM attendance WHERE RollNumber=%s AND Time BETWEEN %s AND %s',
+                           (student[1], last_hour, current_time))
+            existing_attendance = cursor.fetchone()
+
+            if not existing_attendance:
+                # Insert attendance data into the database
+                cursor.execute('INSERT INTO attendance (Name, RollNumber, Time) VALUES (%s, %s, %s)',
+                               (student[0], student[1], current_time))
+                conn.commit()
+                
+                # Update the QLabel with the attendance status
+                self.label_status.setStyleSheet("QLabel { color: green; font-weight: bold; }")
+                self.label_status.setText(f'Attendance marked for {student[0]} ({student[1]}) at {current_time}')
+                #print(f'Attendance marked for {student[0]} ({student[1]}) at {current_time}')
+
+            else:
+                # Update the QLabel with the status if already marked
+                self.label_status.setStyleSheet("QLabel { color: red; font-weight: bold; }")
+                self.label_status.setText(f'Already marked attendance for {student[0]} ({student[1]}) at {current_time}')
+
+        except Exception as e:
+            print(f'Error: {str(e)}')
+
+        finally:
+            conn.close()
 class DashboardPage(QMainWindow):
     def __init__(self, parent=None):
         super(DashboardPage, self).__init__(parent)
@@ -284,8 +449,8 @@ class DashboardPage(QMainWindow):
             table_students = self.findChild(QTableWidget, 'tableWidget')
             if table_students:
                 # Set the column count and headers
-                table_students.setColumnCount(5)
-                table_students.setHorizontalHeaderLabels(["ID", "Name", "Roll Number", "Branch", "Phone Number"])
+                table_students.setColumnCount(4)
+                table_students.setHorizontalHeaderLabels(["Name", "Roll Number", "Branch", "Phone Number"])
 
                 # Set the row count based on the number of students
                 table_students.setRowCount(len(students))
@@ -322,7 +487,7 @@ class DashboardPage(QMainWindow):
             conn.close()
 
             # Create a DataFrame from the fetched data
-            columns = ["ID", "Name", "Roll Number", "Branch", "Phone Number"]
+            columns = ["Name", "Roll Number", "Branch", "Phone Number"]
             df_students = pd.DataFrame(students, columns=columns)
 
             # Specify the path where the file will be saved
@@ -385,7 +550,6 @@ class addStudent(QDialog):
 
             # Create the students table if it does not exist
             cursor.execute('''CREATE TABLE IF NOT EXISTS students (
-                                ID INT AUTO_INCREMENT PRIMARY KEY,
                                 Name VARCHAR(255),
                                 RollNumber VARCHAR(50),
                                 Branch VARCHAR(50),
