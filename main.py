@@ -1,12 +1,13 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog, QMessageBox, QLabel
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QHeaderView
+from PyQt5.QtMultimedia import QSound
 from PyQt5.QtGui import QMovie
 from PyQt5.uic import loadUi
 from PyQt5.QtGui import QPixmap, QImage
 import mysql.connector
 import os
-import barcode
+import barcode, pyttsx3
 import cv2
 from pyzbar.pyzbar import decode
 from barcode.writer import ImageWriter
@@ -235,7 +236,7 @@ class markAttedance(QMainWindow):
         # Create a QTimer to capture frames periodically
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.captureBarcode)
-        self.timer.start(10)  # Set the interval in milliseconds
+        self.timer.start(100)  # Set the interval in milliseconds
 
         # Initialize camera
         self.capture = cv2.VideoCapture(0)  # Change the camera index if needed
@@ -314,6 +315,7 @@ class markAttedance(QMainWindow):
                 else:
                     self.label_status.setStyleSheet("QLabel { color: red; font-weight: bold; }")
                     self.label_status.setText(f'No existing data found with scanned barcode: {barcode_data}')
+                    self.announce(f'No existing data found with scanned barcode')
 
             # Display the camera feed on the QLabel
             self.displayCameraFeed(frame)
@@ -385,21 +387,38 @@ class markAttedance(QMainWindow):
                                (student[0], student[1], current_time))
                 conn.commit()
                 
-                # Update the QLabel with the attendance status
-                self.label_status.setStyleSheet("QLabel { color: green; font-weight: bold; }")
+                # # Update the QLabel with the attendance status
+                # self.label_status.setStyleSheet("QLabel { color: green; font-weight: bold; }")
                 self.label_status.setText(f'Attendance marked for {student[0]} ({student[1]}) at {current_time}')
+                self.announce(f"Attendance marked successfully for {student[0]} (at {current_time}")
                 #print(f'Attendance marked for {student[0]} ({student[1]}) at {current_time}')
 
             else:
-                # Update the QLabel with the status if already marked
-                self.label_status.setStyleSheet("QLabel { color: red; font-weight: bold; }")
-                self.label_status.setText(f'Already marked attendance for {student[0]} ({student[1]}) at {current_time}')
+                # # Update the QLabel with the status if already marked
+                # self.label_status.setStyleSheet("QLabel { color: red; font-weight: bold; }")
+                self.label_status.setText(f'Marked attendance for {student[0]} ({student[1]}) at {current_time}')
+                self.announce(f"Attendance marked successfully for {student[0]} ( at {current_time}")
+                
 
         except Exception as e:
             print(f'Error: {str(e)}')
 
         finally:
             conn.close()
+    
+    def announce(self, message):
+        # Speak the message using text-to-speech
+        engine = pyttsx3.init()
+        engine.say(message)
+        engine.runAndWait()
+
+        # Additionally, you can play a sound if needed
+        if "success" in message.lower():
+            QSound.play("success_sound.wav")  # Adjust the sound file path accordingly
+        elif "error" in message.lower():
+            QSound.play("error_sound.wav")
+
+
 class DashboardPage(QMainWindow):
     def __init__(self, parent=None):
         super(DashboardPage, self).__init__(parent)
@@ -514,6 +533,8 @@ class addStudent(QDialog):
         # Connect the toolButton click to the method for generating BarCode and adding student
         self.toolButton.clicked.connect(self.generateBarcodeAndAddStudent)
 
+        self.toolButton_2.clicked.connect(self.openFaceDataset)
+
     def goBack(self):
         # Show the previous frame (HomePage)
         self.parent().show()
@@ -575,7 +596,26 @@ class addStudent(QDialog):
             # Close the connection only if it's not None
             if conn:
                 conn.close()
+                
 
+    def openFaceDataset(self):
+        # Create and show an instance of the Face_dataset frame
+        self.hide()
+        face_dataset_frame = FaceDatasetFrame(self)
+        face_dataset_frame.show()
+
+class FaceDatasetFrame(QDialog):
+    def __init__(self, parent=None):
+        super(FaceDatasetFrame, self).__init__(parent)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Face_dataset.ui', self)
+
+        # Connect back button click to action
+        self.pushButton_3.clicked.connect(self.goBack)
+
+    def goBack(self):
+        # Show the previous frame (addStudent)
+        self.parent().show()
+        self.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
