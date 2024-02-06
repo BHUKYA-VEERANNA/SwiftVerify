@@ -19,8 +19,8 @@ from datetime import datetime, timedelta
 class HomePage(QMainWindow):
     def __init__(self):
         super(HomePage, self).__init__()
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/home.ui', self)
-
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/home.ui', self)
+        #C:\Users\bveer\Dropbox\4-2 B.Tech\Major Project\Code\Python_GUI\UI_Files
         # Connect button clicks to actions
         self.pushButton_3.clicked.connect(self.openLogin)
         self.pushButton_4.clicked.connect(self.openSignup)
@@ -49,7 +49,7 @@ class HomePage(QMainWindow):
 class LoginPage(QDialog):
     def __init__(self, parent=None):
         super(LoginPage, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/login.ui', self)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/login.ui', self)
 
         # Connect back button click to action
         self.pushButton_2.clicked.connect(self.goBack)
@@ -108,7 +108,7 @@ class LoginPage(QDialog):
 class SignupPage(QDialog):
     def __init__(self, parent=None):
         super(SignupPage, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/signup.ui', self)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/signup.ui', self)
 
         # Connect back button click to action
         self.pushButton_2.clicked.connect(self.goBack)
@@ -202,13 +202,13 @@ class SignupPage(QDialog):
 class SuccessfulPage(QDialog):
     def __init__(self, parent=None):
         super(SuccessfulPage, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/success.ui', self)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/success.ui', self)
 
         # Load and play the GIF in the QLabel
         self.gifLabel = self.findChild(QLabel, 'label')  # Replace 'gifLabel' with the actual object name
         if self.gifLabel:
-            self.playGif('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Icons/success.gif')  # Replace with the actual path to your GIF file
-
+            self.playGif("C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/Icons/success.gif")  # Replace with the actual path to your GIF file
+            #
         # Connect pushButton click to open LoginPage
         self.pushButton.clicked.connect(self.openLoginPage)
 
@@ -228,7 +228,7 @@ class SuccessfulPage(QDialog):
 class markAttedance(QMainWindow):
     def __init__(self, parent=None):
         super(markAttedance, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/mark_attedance.ui', self)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/mark_attedance.ui', self)
 
         # Connect back button click to action
         self.pushButton_2.clicked.connect(self.goBack)
@@ -422,7 +422,7 @@ class markAttedance(QMainWindow):
 class DashboardPage(QMainWindow):
     def __init__(self, parent=None):
         super(DashboardPage, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/dashboard.ui', self)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/dashboard.ui', self)
 
         # Connect back button click to action
         self.pushButton.clicked.connect(self.addStudent)
@@ -510,7 +510,7 @@ class DashboardPage(QMainWindow):
             df_students = pd.DataFrame(students, columns=columns)
 
             # Specify the path where the file will be saved
-            file_path = 'C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/AttendanceDetails.xlsx'
+            file_path = 'C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/AttendanceDetails.xlsx'
 
             # Export the DataFrame to an Excel file
             df_students.to_excel(file_path, index=False)
@@ -525,7 +525,7 @@ class DashboardPage(QMainWindow):
 class addStudent(QDialog):
     def __init__(self, parent=None):
         super(addStudent, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/add_student.ui', self)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/add_student.ui', self)
         
         # Connect back button click to action
         self.pushButton.clicked.connect(self.goBack)
@@ -584,7 +584,7 @@ class addStudent(QDialog):
 
             # Generate barcode and save it
             ean = barcode.get('code128', roll_number, writer=ImageWriter())
-            barcode_path = os.path.join('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/BarCode', f'{roll_number}.png')
+            barcode_path = os.path.join('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/BarCode', f'{roll_number}.png')
             ean.save(barcode_path)
 
             QMessageBox.information(self, 'Success', 'Student added successfully!\nBarcode generated and saved.')
@@ -607,7 +607,7 @@ class addStudent(QDialog):
 class FaceDatasetFrame(QDialog):
     def __init__(self, parent=None):
         super(FaceDatasetFrame, self).__init__(parent)
-        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Face_dataset.ui', self)
+        loadUi('C:/Users/bveer/Dropbox/4-2 B.Tech/Major Project/Code/Python_GUI/UI_Files/Face_dataset.ui', self)
 
         # Connect back button click to action
         self.pushButton_3.clicked.connect(self.goBack)

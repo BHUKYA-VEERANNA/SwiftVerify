@@ -29,7 +29,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>Icons/Home_Bg.jpeg</pixmap>
+    <pixmap>../Icons/Home_Bg.jpeg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -92,45 +92,6 @@ border-radius: 10px; /* Adjust the radius to control the curve */
    </property>
    <property name="autoDefault">
     <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>30</y>
-     <width>211</width>
-     <height>231</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QLabel {
-    background-color: rgb(255, 255, 255);
-    background-image: url(:/newPrefix/Icons/faculty_icon.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-origin: content;
-}
-
-QLabel::before {
-    content: &quot;&quot;;
-    display: block;
-    width: 100%;
-    height: 0;
-    padding-bottom: 100%; /* This creates a square pseudo-element, making it round */
-    border-radius: 50%;
-    background: inherit;
-}
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="pixmap">
-    <pixmap>Icons/faculty_icon.jpg</pixmap>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_3">
@@ -204,26 +165,26 @@ border-radius: 10px; /* Adjust the radius to control the curve */
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>Icons/student_mark_attedance_logo.png</pixmap>
+    <pixmap>../Icons/student_mark_attedance_logo.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>70</y>
-     <width>181</width>
-     <height>161</height>
+     <x>460</x>
+     <y>60</y>
+     <width>221</width>
+     <height>211</height>
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="images.qrc">:/newPrefix/Icons/student_mark_attedance_logo.png</pixmap>
+    <pixmap>../Icons/faculty_icon.jpg</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -231,8 +192,7 @@ border-radius: 10px; /* Adjust the radius to control the curve */
   </widget>
  </widget>
  <resources>
-  <include location="images.qrc"/>
-  <include location="images.qrc"/>
+  <include location="ui_resources_files.qrc"/>
  </resources>
  <connections/>
 </ui>

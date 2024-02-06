@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>../Icons/student_mark_attedance_logo.png</file>
+    <file>signup_icon(1).jpg</file>
+    <file>../Icons/faculty_icon.jpg</file>
+    <file>../Icons/Home_Bg.jpeg</file>
+  </qresource>
+</RCC>

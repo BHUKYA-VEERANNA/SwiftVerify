@@ -91,7 +91,7 @@ border-top-left-radius: 50px;</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>Icons/1000_F_259384390_LZjy7LNM3zeLSXMILA0NphvmOzUQXSuj.jpg</pixmap>
+     <pixmap>../Icons/1000_F_259384390_LZjy7LNM3zeLSXMILA0NphvmOzUQXSuj.jpg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -236,8 +236,8 @@ padding-bottom:7px;</string>
   </widget>
  </widget>
  <resources>
-  <include location="images.qrc"/>
-  <include location="images.qrc"/>
+  <include location="ui_resources_files.qrc"/>
+  <include location="ui_resources_files.qrc"/>
  </resources>
  <connections/>
 </ui>
