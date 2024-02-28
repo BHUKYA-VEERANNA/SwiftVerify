@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Recognition</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #333333;
+    }
+    .button-container {
+        text-align: center;
+    }
+    .button {
+        background-color: #337ab7;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #286090;
+    }
+    .status-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .status {
+        font-size: 24px;
+        color: #333333;
+    }
+    .icon-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .icon {
+        font-size: 64px;
+        color: #333333;
+        margin: 0 10px;
+        animation: pulse 1s infinite alternate; /* Pulsating animation */
+    }
+    @keyframes pulse {
+        from {
+            transform: scale(1);
+        }
+        to {
+            transform: scale(1.1);
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Voice Recognition</h1>
+    <div class="button-container">
+        <button class="button" onclick="startRecognition()">Start Recognition</button>
+    </div>
+    <div class="status-container">
+        <div class="status" id="status">Waiting for voice input...</div>
+    </div>
+    <div class="icon-container" id="icon-container">
+        <i class="Icons/" id="microphone-icon"></i>
+    </div>
+</div>
+
+<script>
+    function startRecognition() {
+        const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.start();
+
+        recognition.onstart = function() {
+            document.getElementById('status').textContent = 'Listening...';
+            document.getElementById('microphone-icon').classList.remove('fa-microphone-slash');
+            document.getElementById('microphone-icon').classList.add('fa-microphone');
+        };
+
+        recognition.onresult = function(event) {
+            const result = event.results[0][0].transcript;
+            document.getElementById('status').textContent = 'Result: ' + result;
+            recognition.stop();
+        };
+
+        recognition.onend = function() {
+            document.getElementById('status').textContent = 'Voice recognition ended.';
+            document.getElementById('microphone-icon').classList.remove('fa-microphone');
+            document.getElementById('microphone-icon').classList.add('fa-microphone-slash');
+        };
+    }
+</script>
+
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

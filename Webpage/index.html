@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Factor Attendance System</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CSS for typing effect */
+        #typing-effect-container {
+            text-align: center;
+            margin-bottom: 20px; /* Adjust margin as needed */
+        }
+
+        #typing-effect {
+            display: inline-block; /* Ensure inline display for animation */
+            overflow: hidden; /* Ensures the text is not revealed until the animation */
+            border-right: .15em solid orange; /* The typewriter cursor */
+            white-space: nowrap; /* Keeps the content on a single line */
+            letter-spacing: .10em; /* Adjust as needed */
+            animation: typing 5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        /* The typing effect */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://i.ibb.co/mqFp7Xw/logo.png" alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </nav>
+        <div class="login">
+            <a href="login.html">Login</a>
+        </div>
+    </header>
+
+    <section id="home">
+        <div class="container">
+            <div class="welcome">
+                <h1 id="typing-effect-container">
+                    <span id="typing-effect"></span>
+                </h1>
+            </div>
+            <div class="mark-attendance-section">
+                <button class="mark-attendance-button">Mark Attendance</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <div class="feature-row">
+                <div class="feature-box">
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <img src="https://i.ibb.co/kgZBMmr/barcode.png" alt="Barcode Icon">
+                        </div>
+                        <div class="feature-text">
+                            <h3 class="feature-title">Barcode Scanning</h3>
+                            <p class="feature-description">Swift and efficient identification process.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <img src="https://i.ibb.co/VNpXg6z/face-recognition.jpg" alt="Facial Recognition Icon">
+                        </div>
+                        <div class="feature-text">
+                            <h3 class="feature-title">Facial Recognition</h3>
+                            <p class="feature-description">Advanced technology for accurate authentication.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-row">
+                <div class="feature-box">
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <img src="https://i.ibb.co/BwSxBR9/face.png" alt="Gesture Analysis Icon">
+                        </div>
+                        <div class="feature-text">
+                            <h3 class="feature-title">Gesture Analysis</h3>
+                            <p class="feature-description">Enhancing security with intuitive user interactions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <img src="https://i.ibb.co/Bq8MWHM/voice.png" alt="Voice Matching Icon">
+                        </div>
+                        <div class="feature-text">
+                            <h3 class="feature-title">Voice Matching</h3>
+                            <p class="feature-description">Additional layer of authentication for robust verification.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <section id="about" class="about-section">
+        <h2 class="section-title">Meet the Team</h2>
+        <div class="team-members">
+            <div class="column">
+                <div class="card">
+                    <img src="https://i.ibb.co/W2jKBQm/veeranna.jpg" alt="veeranna" class="profile-img">
+                    <div class="container">
+                        <h2>Bhukya Veeranna</h2>
+                        <p>20r11a6607@gcet.edu.in</p>
+                        <p><button class="button">Contact</button></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="column">
+                <div class="card">
+                    <img src="https://i.ibb.co/n1H1Zz6/shalini.jpg" alt="shalini" class="profile-img">
+                    <div class="container">
+                        <h2>Madanu Shalini</h2>
+                        <p>20r11a6631@gcet.edu.in</p>
+                        <p><button class="button">Contact</button></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="column">
+                <div class="card">
+                    <img src="https://i.ibb.co/CsttMwj/saikiran.jpg" alt="saikiran" class="profile-img">
+                    <div class="container">
+                        <h2>Sai Kiran</h2>
+                        <p>20r11a6643@gcet.edu.in</p>
+                        <p><button class="button">Contact</button></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+                  
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-form">
+                <form id="contact-form" method="post" action="contact.php">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="social-icons">
+                    <a href="https://github.com/BHUKYA-VEERANNA/SwiftVerify" target="_blank"><img src="Icons/github.png" alt="GitHub"></a>
+                    <a href="https://www.dropbox.com/scl/fo/7x7trtl4f08fnxlktqnyh/h?rlkey=acmg5cockijdt98dz8e4a9roe&dl=0" target="_blank"><img src="Icons/dropbox.png" alt="Dropbox"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+                    
+    <!-- JavaScript for the typing effect -->
+    <script>
+        // JavaScript for the typing effect
+        function type() {
+            const text = "Welcome to the Multi-Factor Attendance System";
+            let index = 0;
+            const typingEffectElement = document.getElementById('typing-effect');
+
+            function typingAnimation() {
+                if (index < text.length) {
+                    typingEffectElement.innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(typingAnimation, 100); // Adjust typing speed here (milliseconds)
+                } else {
+                    // Reset typing animation
+                    typingEffectElement.innerHTML = '';
+                    index = 0;
+                    setTimeout(typingAnimation, 0); // Start typing again immediately
+                }
+            }
+
+            typingAnimation();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            type();
+        });
+
+        const navLinks = document.querySelectorAll("nav ul li a");
+
+        navLinks.forEach(function(link) {
+            link.addEventListener("click", function(event) {
+                event.preventDefault();
+                const targetId = this.getAttribute("href"); // Get the target section ID
+                const targetSection = document.querySelector(targetId);
+                const offset = targetSection.offsetTop; // Get the offset position of the target section
+                window.scrollTo({
+                    top: offset,
+                    behavior: "smooth" // Smooth scrolling behavior
+                });
+            });
+        });
+
+        const markAttendanceButton = document.querySelector(".mark-attendance-button");
+
+        markAttendanceButton.addEventListener("click", function() {
+            window.location.href = "barcode_scanner.html"; // Redirect to barcode_scanner.html
+        });
+
+        // Apply animations
+        markAttendanceButton.style.animation = "slideInFromLeft 1s ease, fadeIn 1s ease";
+    </script>
+
+</body>
+</html>
