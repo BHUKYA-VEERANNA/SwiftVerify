@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #barcodeVideo {
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #barcodeData {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow-y: auto;
+            max-height: 200px;
+        }
+
+        #buttonsContainer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h1>Barcode Detector</h1>
+        <button id="scanBtn" class="btn">Scan Barcode</button>
+        <video id="barcodeVideo" autoplay playsinline></video>
+        <div id="barcodeData"></div>
+        <div id="buttonsContainer">
+            <button id="scanAnotherBtn" class="btn">Scan Another</button>
+            <a href="face_detection.html" id="nextBtn" class="btn">Next</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quagga/dist/quagga.min.js"></script>
+    <script>
+        document.getElementById('scanBtn').addEventListener('click', function () {
+            // Ask for permission to access the camera
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment' // Use rear camera if available
+                }
+            })
+            .then(function (stream) {
+                document.getElementById('barcodeVideo').srcObject = stream;
+                document.getElementById('barcodeVideo').play();
+                document.getElementById('barcodeData').innerHTML = 'Scanning...';
+                Quagga.init({
+                    inputStream: {
+                        name: "Live",
+                        type: "LiveStream",
+                        target: document.querySelector("#barcodeVideo"),
+                    },
+                    locator: {
+                        patchSize: "medium",
+                        halfSample: true
+                    },
+                    numOfWorkers: navigator.hardwareConcurrency || 4,
+                    decoder: {
+                        readers: ["ean_reader", "ean_8_reader"]
+                    },
+                    locate: true
+                }, function (err) {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    console.log("Initialization finished. Ready to start");
+                    Quagga.start();
+                });
+
+                Quagga.onDetected(function (result) {
+                    const barcodeValue = result.codeResult.code;
+                    document.getElementById('barcodeData').innerHTML = `Scanned Barcode: ${barcodeValue}`;
+                    Quagga.stop();
+                });
+            })
+            .catch(function (err) {
+                console.error('Error accessing the camera:', err);
+                document.getElementById('barcodeData').innerHTML = 'Error accessing the camera. Please grant permission.';
+            });
+        });
+
+        document.getElementById('scanAnotherBtn').addEventListener('click', function () {
+            document.getElementById('barcodeData').innerHTML = '';
+            document.getElementById('barcodeVideo').srcObject.getTracks().forEach(track => track.stop());
+        });
+    </script>
+</body>
+
+</html>

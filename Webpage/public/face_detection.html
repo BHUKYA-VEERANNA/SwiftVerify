@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Face Recognition</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #333333;
+    }
+    #frame-container {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    #frame {
+        width: 100%;
+        border-radius: 10px;
+    }
+    #status {
+        text-align: center;
+        font-size: 24px;
+        color: #333333;
+        margin-bottom: 20px;
+    }
+    .button-container {
+        text-align: center;
+    }
+    .button {
+        background-color: #337ab7;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .button:hover {
+        background-color: #286090;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Face Recognition</h1>
+    <div id="frame-container">
+        <video id="frame" autoplay></video>
+    </div>
+    <!-- <div id="status">No Face Found</div> -->
+    <div class="button-container">
+        <button class="button" onclick="window.location.href='voice_recognition.html'">Next</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-recognition"></script>
+<script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+
+<script>
+    async function startVideo() {
+        const video = document.getElementById('frame');
+        const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+        video.srcObject = stream;
+        return new Promise(resolve => {
+            video.onloadedmetadata = () => {
+                resolve(video);
+            };
+        });
+    }
+
+    async function detectFaces() {
+        await startVideo();
+        const video = document.getElementById('frame');
+
+        setInterval(async () => {
+            const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+            if (detections.length > 0) {
+                document.getElementById('status').textContent = 'Face Recognition';
+                document.getElementById('status').style.color = '#00cc66';
+            } else {
+                document.getElementById('status').textContent = 'No Face Found';
+                document.getElementById('status').style.color = '#ff3333';
+            }
+        }, 1000);
+    }
+
+    detectFaces().catch(err => console.error(err));
+</script>
+</body>
+</html>
