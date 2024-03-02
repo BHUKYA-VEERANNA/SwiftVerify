@@ -1,0 +1,13 @@
+Barcode detection using Deep learning
+https://medium.com/invisible-insights/barcode-detection-using-deep-learning-techniques-1abde201df08
+
+Multi Barcode Scanner github repo
+https://github.com/w-okada/image-analyze-workers/tree/master/012_barcode-scanner-worker-js
+
+Comparision
+https://www.dynamsoft.com/codepool/multiple-barcodes-reading-benchmark-and-comparison.html
+
+Perfectly working barcode scanner/detector
+https://github.com/yushulx/javascript-barcode-qr-code-scanner
+
+
