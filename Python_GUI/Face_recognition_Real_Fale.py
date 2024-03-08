@@ -77,7 +77,7 @@ def main(model_dir, device_id, target_width, target_height):
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, target_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, target_height)
 
-    window_name = "Frame"
+    window_name = "Face Recognition"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
     cv2.resizeWindow(window_name, target_width, target_height)
     
