@@ -10,4 +10,10 @@ https://www.dynamsoft.com/codepool/multiple-barcodes-reading-benchmark-and-compa
 Perfectly working barcode scanner/detector
 https://github.com/yushulx/javascript-barcode-qr-code-scanner
 
+Sign in & Sign Up page
+https://github.com/developergtm24/sign-in-and-sign-up-form
+
+Voice verification Blog and Information
+https://domino.ai/blog/building-a-speaker-recognition-model
+
 

@@ -1,5 +1,5 @@
 // Get the login form element
-const loginForm = document.getElementById('loginForm');
+const loginForm = document.querySelector('.sign-in-form');
 
 // Add an event listener for form submission
 loginForm.addEventListener('submit', function(event) {
@@ -20,38 +20,25 @@ loginForm.addEventListener('submit', function(event) {
     }
 });
 
-const container = document.getElementById('container');
-const loginBtn = document.getElementById('login');
-const signupBtn = document.getElementById('register');
-const signinForm = document.getElementById('login-form');
-const signupForm = document.getElementById('signup-form');
+const container = document.querySelector('.container');
+const signinForm = document.querySelector('.sign-in-form');
+const signupForm = document.querySelector('.sign-up-form');
+const signinBtn = document.querySelector('#sign-in-btn');
+const signupBtn = document.querySelector('#sign-up-btn');
 
-loginBtn.addEventListener('click', () => {
-    container.classList.remove("active");
-    signinForm.style.display = 'block';
-    signupForm.style.display = 'none';
+signinBtn.addEventListener('click', () => {
+    container.classList.remove('sign-up-mode');
 });
 
 signupBtn.addEventListener('click', () => {
-    container.classList.add("active");
-    signinForm.style.display = 'none';
-    signupForm.style.display = 'block';
-});
-
-signinForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
-    // Perform login logic here
-    // For demonstration, let's just log the username and password
-    console.log('Logging in with username:', username, 'and password:', password);
+    container.classList.add('sign-up-mode');
 });
 
 signupForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const username = document.getElementById('signup-username').value;
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
+    const username = document.querySelector('.sign-up-form input[type="text"]').value;
+    const email = document.querySelector('.sign-up-form input[type="email"]').value;
+    const password = document.querySelector('.sign-up-form input[type="password"]').value;
     // Perform signup logic here
     // For demonstration, let's just log the username, email, and password
     console.log('Signing up with username:', username, 'email:', email, 'and password:', password);
