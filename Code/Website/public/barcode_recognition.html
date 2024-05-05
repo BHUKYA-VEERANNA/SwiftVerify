@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Barcode Recognition</title>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@9.6.20/dist/dbr.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #cameraFeed {
+            border: 5px solid black;
+            width: 500px; /* Adjust width as needed */
+            height: 420px; /* Adjust height as needed */
+            margin-bottom: 20px;
+        }
+
+        #barcodeData {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+
+        #attendanceStatus {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 5px;
+            display: none; /* Initially hide the attendance status */
+        }
+
+        #nextButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Barcode Recognition</h1>
+    <div id="container">
+        <div id="cameraFeed"></div>
+        <div id="barcodeData">Barcode Result: <span id='result'>N/A</span></div>
+        <div id="attendanceStatus">Attendance Status: <span id='status'>N/A</span></div>
+        <button id="nextButton">Next</button>
+    </div>
+
+    <script>
+        // Set the trial license key
+        Dynamsoft.DBR.BarcodeReader.license = 'DLS2eyJoYW5kc2hha2VDb2RlIjoiMTAyNzY3NzEwLVRYbFhaV0pRY205cSIsIm1haW5TZXJ2ZXJVUkwiOiJodHRwczovL21kbHMuZHluYW1zb2Z0b25saW5lLmNvbSIsIm9yZ2FuaXphdGlvbklEIjoiMTAyNzY3NzEwIiwic3RhbmRieVNlcnZlclVSTCI6Imh0dHBzOi8vc2Rscy5keW5hbXNvZnRvbmxpbmUuY29tIiwiY2hlY2tDb2RlIjoyMTQwMTMzNjc2fQ==';
+
+        window.onload = async function () {
+            try {
+                await Dynamsoft.DBR.BarcodeScanner.loadWasm();
+                await initBarcodeScanner();
+            } catch (ex) {
+                alert(ex.message);
+                throw ex;
+            }
+        };
+
+        let scanner = null;
+
+        async function initBarcodeScanner() {
+            scanner = await Dynamsoft.DBR.BarcodeScanner.createInstance();
+            scanner.onFrameRead = async results => {
+                for (let result of results) {
+                    // Extract only data part from the barcode result
+                    const data = result.barcodeText.replace(/^CODE_/, '');
+                    document.getElementById('result').innerHTML = data;
+                    document.getElementById('barcodeData').style.display = 'block'; // Show barcode data box
+                    await checkStudent(data); // Check student in the database
+                    playSound(); // Play sound when barcode is detected
+                }
+            };
+            scanner.onUnduplicatedRead = (txt, result) => { };
+            document.getElementById('cameraFeed').appendChild(scanner.getUIElement());
+            document.getElementById('nextButton').addEventListener('click', onNextButtonClick);
+            await scanner.show();
+        }
+
+        async function checkStudent(rollNumber) {
+            try {
+                const response = await fetch('/check_student', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ rollNumber })
+                });
+                const data = await response.json();
+                if (data.valid) {
+                    // Student found in the database
+                    document.getElementById('attendanceStatus').style.display = 'block';
+                    document.getElementById('status').innerText = 'Attendance Marked';
+                } else {
+                    // Student not found in the database
+                    document.getElementById('attendanceStatus').style.display = 'block';
+                    document.getElementById('status').innerText = 'No Data Found';
+                    // Clear the barcode result
+                    document.getElementById('result').innerText = 'N/A';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function playSound() {
+            // Create an AudioContext
+            let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            // Create a OscillatorNode
+            let oscillator = audioContext.createOscillator();
+            // Set frequency to 1000 Hz
+            oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+            // Connect the oscillator to the AudioContext destination (speakers)
+            oscillator.connect(audioContext.destination);
+            // Start the oscillator
+            oscillator.start();
+            // Stop the oscillator after 100 milliseconds
+            setTimeout(() => {
+                oscillator.stop();
+            }, 100);
+        }
+
+        function onNextButtonClick() {
+            // Redirect to face.html
+            window.location.href = 'face_detection.html';
+        }
+    </script>
+</body>
+
+</html>

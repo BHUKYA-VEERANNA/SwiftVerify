@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Verification</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        text-align: center;
+    }
+    h1 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+    #startButton {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    #startButton:hover {
+        background-color: #0056b3;
+    }
+    #soundWave {
+        display: none;
+        margin: 20px auto;
+    }
+    #messageBox {
+        display: none;
+        background-color: #dff0d8;
+        color: #3c763d;
+        border: 1px solid #d6e9c6;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+    .failure {
+        display: none;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Voice Verification</h1>
+    <button id="startButton">Start Recognition</button>
+    <img id="soundWave" src="https://i.ibb.co/hRnnp3P/soundwave.png" alt="Sound Wave" width="100">
+    <div id="messageBox"></div>
+    <div id="failureMessage" class="failure"></div>
+</div>
+<script>
+    document.getElementById("startButton").addEventListener("click", function() {
+        var soundWave = document.getElementById("soundWave");
+        soundWave.style.display = "block";
+
+        // Simulating voice detection
+        var voiceDetected = false;
+        setTimeout(function() {
+            voiceDetected = true;
+        }, 1500); // Assuming voice detected after 1.5 seconds
+
+        setTimeout(function() {
+            if (voiceDetected) {
+                // Simulating successful attendance mark
+                var messageBox = document.getElementById("messageBox");
+                messageBox.style.display = "block";
+                messageBox.innerText = "Attendance marked successfully";
+
+                // Wait for 5 seconds and then redirect
+                setTimeout(function() {
+                    window.location.href = "barcode_recognition.html";
+                }, 5000);
+            } else {
+                var failureMessage = document.getElementById("failureMessage");
+                failureMessage.style.display = "block";
+                failureMessage.innerText = "Voice mismatch detected";
+
+                // Wait for 5 seconds and then redirect
+                setTimeout(function() {
+                    window.location.href = "barcode_recognition.html";
+                }, 5000);
+            }
+            soundWave.style.display = "none";
+        }, 3000); // Waiting for 3 seconds
+    });
+</script>
+</body>
+</html>
