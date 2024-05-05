@@ -12,7 +12,7 @@ from pyannote.audio import Model
 
 # Load the model
 try:
-    model = Model.from_pretrained("pyannote/embedding", use_auth_token="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")
+    model = Model.from_pretrained("pyannote/embedding", use_auth_token="YOUR_API_TOKEN_HERE")
     vec = Inference(model, window='whole')
 except Exception as e:
     print("Error loading the model:", e)
